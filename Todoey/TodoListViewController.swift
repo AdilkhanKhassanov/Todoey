@@ -10,11 +10,15 @@ import UIKit
 
 class TodoListViewController: UITableViewController {
 
+    var userDefaults = UserDefaults.standard
     var itemArray = ["Find 11", "Hug her", "Let her destroy shadow demon"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        if let items = userDefaults.array(forKey: "TodoListArray") as? [String] {
+            itemArray = items
+        }
     }
 
     //MARK: - Tableview Datasource Methods
@@ -42,6 +46,7 @@ class TodoListViewController: UITableViewController {
         }
         
         tableView.deselectRow(at: indexPath, animated: true)
+        
     }
     
     //MARK: - Add new items
@@ -57,6 +62,7 @@ class TodoListViewController: UITableViewController {
         let addAction = UIAlertAction(title: "Add", style: .default) { (action) in
 
             self.itemArray.append(textField.text!)
+            self.userDefaults.set(self.itemArray, forKey: "TodoListArray")
             
             self.tableView.reloadData()
             
@@ -64,7 +70,6 @@ class TodoListViewController: UITableViewController {
         
         alert.addAction(cancelAction)
         alert.addAction(addAction)
-        
         alert.addTextField { (alertTextField) in
             
             alertTextField.placeholder = "Create new ToDo"
